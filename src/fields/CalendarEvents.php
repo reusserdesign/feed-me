@@ -75,15 +75,16 @@ class CalendarEvents extends Field implements FieldInterface
         $match = Hash::get($this->fieldInfo, 'options.match', 'title');
         $node = Hash::get($this->fieldInfo, 'node');
 
-        $typeIds = [];
+        // Sources are stored as `calendar:{id}`
+        $calendarIds = [];
 
         if (is_array($sources)) {
             foreach ($sources as $source) {
-                [, $uid] = explode(':', $source);
-                $typeIds[] = $uid;
+                [, $calendarId] = explode(':', $source);
+                $calendarIds[] = $calendarId;
             }
         } elseif ($sources === '*') {
-            $typeIds = null;
+            $calendarIds = null;
         }
 
         // In multi-site, there's currently no way to query across all sites - we use the current site
@@ -99,7 +100,7 @@ class CalendarEvents extends Field implements FieldInterface
         }
 
         $criteria['status'] = null;
-        $criteria['typeId'] = $typeIds;
+        $criteria['calendarId'] = $calendarIds;
         $criteria['limit'] = $limit;
 
         $foundElements = [];
