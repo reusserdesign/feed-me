@@ -3,6 +3,7 @@
 namespace craft\feedme\fields;
 
 use Cake\Utility\Hash;
+use craft\base\FieldInterface as BaseFieldInterface;
 use craft\elements\Entry;
 use craft\feedme\base\Field;
 use craft\feedme\base\FieldInterface;
@@ -167,8 +168,9 @@ class Matrix extends Field implements FieldInterface
             $subFieldInfo = Hash::get($complexInfo, 'info');
             $nodePaths = Hash::get($complexInfo, 'data');
 
-            // A nested Matrix finds its blocks by the first index in each node path, so drop this block's index
-            if (Hash::get($subFieldInfo, 'field') === MatrixField::class) {
+            // A field with nested entries (e.g. a nested Matrix) finds them by the first index in each node path,
+            // so drop this block's index
+            if (Hash::get($subFieldInfo, 'blocks')) {
                 $nodePaths = $this->_removeBlockIndex($nodePaths);
             }
 
@@ -439,9 +441,14 @@ class Matrix extends Field implements FieldInterface
 
                 $nestedFieldNodes = Hash::extract($subFieldInfo, 'fields.{*}.node');
 
-                // A nested Matrix has its nodes mapped on its own blocks' fields and attributes
+                // A field with nested entries (e.g. a nested Matrix) has its nodes mapped on its own entry types'
+                // fields and attributes, plus its own node if it has one (e.g. a CKEditor field's HTML)
                 if (Hash::get($subFieldInfo, 'blocks')) {
                     $nestedFieldNodes = $this->_getNestedMatrixNodes($subFieldInfo);
+
+                    if ($node && $node !== 'noimport') {
+                        $nestedFieldNodes[] = $node;
+                    }
                 }
 
                 if ($nestedFieldNodes) {
@@ -515,13 +522,14 @@ class Matrix extends Field implements FieldInterface
     }
 
     /**
-     * Returns all of the matrix field's entry types' fields.
+     * Returns all of the field's entry types' fields. This is usually a Matrix field, but can be any field
+     * with nested entry types (e.g. a CKEditor field).
      *
-     * @param MatrixField $field
+     * @param BaseFieldInterface $field
      * @return array
      * @throws \yii\base\InvalidConfigException
      */
-    private function _getEntryTypeFields(MatrixField $field): array
+    private function _getEntryTypeFields(BaseFieldInterface $field): array
     {
         $fields = [];
         if (!empty($entryTypes = $field->getEntryTypes())) {

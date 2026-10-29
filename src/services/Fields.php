@@ -22,6 +22,7 @@ use craft\feedme\fields\Assets;
 use craft\feedme\fields\CalendarEvents;
 use craft\feedme\fields\Categories;
 use craft\feedme\fields\Checkboxes;
+use craft\feedme\fields\CKEditor;
 use craft\feedme\fields\CommerceProducts;
 use craft\feedme\fields\CommerceVariants;
 use craft\feedme\fields\ContentBlock;
@@ -200,6 +201,7 @@ class Fields extends Component
 
                 // Third-Party
                 CalendarEvents::class,
+                CKEditor::class,
                 DigitalProducts::class,
                 EntriesSubset::class,
                 GoogleMaps::class,

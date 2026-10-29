@@ -1,0 +1,16 @@
+{# ------------------------ #}
+{# Available Variables #}
+{# ------------------------ #}
+{# Fields: #}
+{# name, handle, instructions, feed, feedData, field, fieldClass #}
+{# ------------------------ #}
+
+{# The HTML is mapped like any other field #}
+{% include 'feed-me/_includes/fields/default' %}
+
+{# Nested entries are mapped like Matrix entries, by entry type #}
+{% if field is defined and field and field.getEntryTypes()|length %}
+    {% include 'feed-me/_includes/fields/matrix' with {
+        parentPath: path ?? [handle],
+    } %}
+{% endif %}
