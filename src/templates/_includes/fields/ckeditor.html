@@ -8,8 +8,11 @@
 {# The HTML is mapped like any other field #}
 {% include 'feed-me/_includes/fields/default' %}
 
-{# Nested entries are mapped like Matrix entries, by entry type #}
-{% if field is defined and field and field.getEntryTypes()|length %}
+{# Nested entries are mapped like Matrix entries, by entry type. A nested entry can have the same field (e.g. an #}
+{# entry type that's allowed in a field it contains), so only map them at the first level, or this never ends. #}
+{% set ancestorPath = (path ?? [handle])|slice(0, -1) %}
+
+{% if field is defined and field and field.getEntryTypes()|length and handle not in ancestorPath %}
     {% include 'feed-me/_includes/fields/matrix' with {
         parentPath: path ?? [handle],
     } %}
