@@ -441,6 +441,13 @@ class Matrix extends Field implements FieldInterface
 
                 $nestedFieldNodes = Hash::extract($subFieldInfo, 'fields.{*}.node');
 
+                // A Link field also has nodes for the elements it links to
+                $nestedFieldNodes = array_merge(
+                    $nestedFieldNodes,
+                    Hash::extract($subFieldInfo, 'elements.{*}.node'),
+                    Hash::extract($subFieldInfo, 'elements.{*}.options.urlNode'),
+                );
+
                 // A field with nested entries (e.g. a nested Matrix) has its nodes mapped on its own entry types'
                 // fields and attributes, plus its own node if it has one (e.g. a CKEditor field's HTML)
                 if (Hash::get($subFieldInfo, 'blocks')) {
