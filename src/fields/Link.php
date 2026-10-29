@@ -282,7 +282,7 @@ class Link extends Field implements FieldInterface
      */
     private function _uploadLinkedAsset(AssetLinkType $linkType, mixed $identifier, array $elementInfo): ?int
     {
-        $url = DataHelper::fetchValue($this->feedData, ['node' => Hash::get($elementInfo, 'options.urlNode')], $this->feed);
+        $url = DataHelper::fetchValue($this->feedData, Hash::get($elementInfo, 'url', []), $this->feed);
 
         if (!is_string($url) || !UrlHelper::isAbsoluteUrl($url)) {
             return null;

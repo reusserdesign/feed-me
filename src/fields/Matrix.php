@@ -304,7 +304,7 @@ class Matrix extends Field implements FieldInterface
                 $nestedFieldNodes = array_merge(
                     $nestedFieldNodes,
                     Hash::extract($subFieldInfo, 'elements.{*}.node'),
-                    Hash::extract($subFieldInfo, 'elements.{*}.options.urlNode'),
+                    Hash::extract($subFieldInfo, 'elements.{*}.url.node'),
                 );
 
                 if ($nestedFieldNodes) {

@@ -165,8 +165,8 @@
                         <span>{{ 'URL to upload from:'|t('feed-me') }}</span>
 
                         {{ forms.selectField({
-                            name: 'options[urlNode]',
-                            value: hash_get(feed.fieldMapping, optionsPath ~ '.urlNode') ?: '',
+                            name: 'url[node]',
+                            value: hash_get(feed.fieldMapping, path|join('.') ~ '.url.node') ?: '',
                             options: feedData,
                             class: 'selectize fullwidth',
                         }) }}
